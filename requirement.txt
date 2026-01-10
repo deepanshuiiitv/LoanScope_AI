@@ -1,0 +1,15 @@
+google-generativeai 
+pydantic 
+python-dotenv 
+pillow 
+pdf2image
+google-genai
+
+opencv-python-headless 
+scikit-image 
+numpy
+
+pdfplumber 
+easyocr 
+thefuzz 
+python-dateutil

@@ -1,0 +1,44 @@
+# =====================
+# Python
+# =====================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.log
+
+# =====================
+# Virtual Environments
+# =====================
+.loanscopeenv/
+venv/
+env/
+ENV/
+.venv/
+
+# =====================
+# Environment Variables
+# =====================
+.env
+.env.*
+*.env
+
+# =====================
+# OS / Editor
+# =====================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# =====================
+# Jupyter
+# =====================
+.ipynb_checkpoints/
+
+# =====================
+# Build / Dist
+# =====================
+build/
+dist/
+*.egg-info/
