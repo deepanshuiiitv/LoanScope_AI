@@ -13,3 +13,6 @@ pdfplumber
 easyocr 
 thefuzz 
 python-dateutil
+
+flask
+langchain-core
