@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Document Upload System{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h2>Welcome to Document Upload System</h2>
+    <p>Securely upload and manage your important documents</p>
+    <a href="/upload" class="btn btn-primary">Start Uploading</a>
+</div>
+
+<section class="features">
+    <div class="feature-card">
+        <h3>🔒 Secure Upload</h3>
+        <p>Your documents are safely stored on our secure servers</p>
+    </div>
+    <div class="feature-card">
+        <h3>📋 Organize Documents</h3>
+        <p>Organize documents by category for easy access</p>
+    </div>
+    <div class="feature-card">
+        <h3>⚡ Fast Processing</h3>
+        <p>Quick and efficient document processing</p>
+    </div>
+</section>
+
+{% if documents %}
+<section class="recent-uploads">
+    <h3>Your Uploaded Documents</h3>
+    {% for category, files in documents.items() %}
+        {% if files %}
+        <div class="category-group">
+            <h4>{{ category }}</h4>
+            <ul>
+                {% for file in files %}
+                <li>{{ file }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    {% endfor %}
+</section>
+{% endif %}
+{% endblock %}

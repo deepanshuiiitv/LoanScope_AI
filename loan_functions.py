@@ -80,7 +80,7 @@ def hard_rule_tool(data):
 # AI RISK ENGINE
 # -------------------------
 def ai_risk_tool(data):
-    API_KEY = os.getenv("api_key")
+    API_KEY = os.getenv("API_KEY")
     client = genai.Client(api_key=API_KEY)
     if data.get("hard_rule", {}).get("decision") == "REJECT":
         return data
