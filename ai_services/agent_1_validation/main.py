@@ -1,38 +1,3 @@
-# from .agent import ValidationAgent
-# from .schemas import DocCategory
-
-# def main():
-#     agent = ValidationAgent()
-
-#     # --- Test Case 1: Correct PAN Card ---
-#     print("\n--- TEST 1: Uploading a PAN Card (Expecting PAN) ---")
-#     # Replace with a real path on your machine to test
-#     result = agent.validate(
-#         file_path="sample_documents/my_pan_card_2.jpg", 
-#         expected_type=DocCategory.PAN_CARD
-#     )
-#     print("Result:", result)
-
-#     # --- Test Case 2: Wrong Document (Upload Aadhaar, Expect PAN) ---
-#     print("\n--- TEST 2: Uploading Aadhaar (Expecting PAN) ---")
-#     result = agent.validate(
-#         file_path="sample_documents/my_aadhaar_2.png", 
-#         expected_type=DocCategory.PAN_CARD
-#     )
-#     print("Result:", result)
-
-#     # In main.py
-#     print("\n--- TEST 3: Farmer Document (7/12 Extract) ---")
-#     # Find a sample "7/12 extract image" on google and save it
-#     result = agent.validate(
-#         file_path="sample_documents/sample_7_12_extract.jpg", 
-#         expected_type=DocCategory.LAND_RECORD
-#     )
-#     print("Result:", result)
-
-# if __name__ == "__main__":
-#     main()
-
 
 
 import os
@@ -76,34 +41,30 @@ def main():
         ("FAIL CASE: Random Selfie", "sample_documents/random_selfie.jpg", DocCategory.PAN_CARD),
     ]
 
-    print(f"🚀 Starting Batch Validation for {len(test_cases)} Scenarios...\n")
+    results = []
 
     for description, file_path, expected_type in test_cases:
-        print(f"---------------------------------------------------------------")
-        print(f"📂 TEST: {description}")
-        print(f"   path: {file_path}")
-        
-        # 1. Check if file exists to prevent crashing
         if not os.path.exists(file_path):
-            print(f"   ⚠️  SKIPPING: File not found in 'sample_documents/'")
+            results.append({
+                "test": description,
+                "status": "SKIPPED",
+                "reason": "File not found"
+            })
             continue
 
-        # 2. Run the Agent
-        result = agent.validate(file_path=file_path, expected_type=expected_type)
-        
-        # 3. Print Result nicely
-        status_icon = "✅" if result.get("status") == "APPROVED" else "❌"
-        if "FAIL CASE" in description and result.get("status") == "REJECTED":
-            status_icon = "✅ (Correctly Rejected)"
-            
-        print(f"   STATUS: {status_icon} {result.get('status')}")
-        print(f"   Detected: {result.get('detected_type')}")
-        print(f"   Confidence: {result.get('confidence_score')}")
-        
-        if result.get("rejection_reason"):
-            print(f"   Reason: {result.get('rejection_reason')}")
-        
-        print(f"---------------------------------------------------------------\n")
+        result = agent.validate(
+            file_path=file_path,
+            expected_type=expected_type
+        )
+
+        results.append({
+            "test": description,
+            "file_path": file_path,
+            "expected_type": expected_type.name,
+            **result
+        })
+
+    return results
 
 if __name__ == "__main__":
     main()

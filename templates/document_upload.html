@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% block title %}Upload Documents{% endblock %}
+
+{% block content %}
+<h2>Applicant Document Upload</h2>
+
+<!-- Applicant Type -->
+<label><strong>Applicant Type</strong></label>
+<select id="applicantType">
+    <option value="">-- Select --</option>
+    <option value="SALARIED">Salaried</option>
+    <option value="BUSINESS">Business</option>
+    <option value="FARMER">Farmer</option>
+</select>
+
+<hr>
+
+<!-- COMMON DOCUMENTS -->
+<h3>Common Documents</h3>
+
+<div class="doc-group">
+    <p>Identity Proof (Any One)</p>
+    <div class="file-row">
+        <label>Aadhaar Card
+            <input type="file" data-category="AADHAAR_CARD">
+        </label>
+    </div>
+    <div class="file-row">
+        <label>Voter ID
+            <input type="file" data-category="VOTER_ID">
+        </label>
+    </div>
+    <div class="file-row">
+        <label>Driving License
+            <input type="file" data-category="DRIVING_LICENSE">
+        </label>
+    </div>
+</div>
+
+<div class="doc-group">
+    <p>PAN Card (Mandatory)</p>
+    <input type="file" data-category="PAN_CARD" data-required="true">
+</div>
+
+<div class="doc-group">
+    <p>Application Data</p>
+    <div class="file-row">
+        <label>Loan Amount
+            <input type="number" id="loan_amount" name="loan_amount" placeholder="Requested loan amount">
+        </label>
+    </div>
+    <div class="file-row">
+        <label>Property Value
+            <input type="number" id="property_value" name="property_value" placeholder="Estimated property value">
+        </label>
+    </div>
+
+    <!-- Common credit score: hide for Farmer (farmer has its own optional field) -->
+    <div id="commonCreditScore" class="conditional visible">
+        <div class="file-row">
+            <label>Credit Score
+                <input type="number" id="credit_score" name="credit_score" placeholder="Optional for Farmer/NTC">
+            </label>
+        </div>
+    </div>
+</div>
+
+<div class="doc-group">
+    <p>Address Proof (Any One)</p>
+    <div class="file-row">
+        <label>Utility Bill
+            <input type="file" data-category="UTILITY_BILL">
+        </label>
+    </div>
+    <div class="file-row">
+        <label>Rent Agreement
+            <input type="file" data-category="RENT_AGREEMENT">
+        </label>
+    </div>
+</div>
+
+<!-- SALARIED -->
+<div id="salariedDocs" class="conditional">
+    <h3>Salaried Documents</h3>
+    <div class="file-row">
+        <label>Net Monthly Salary
+            <input type="number" id="net_monthly_salary" name="net_monthly_salary" placeholder="Net monthly salary">
+        </label>
+    </div>
+    <div class="file-row">
+        <label>Salary Slip (upload at least one)
+            <input type="file" data-category="SALARY_SLIP" data-required="true">
+        </label>
+    </div>
+    <div class="file-row">
+        <label>Form 16
+            <input type="file" data-category="FORM_16">
+        </label>
+    </div>
+    <div class="file-row">
+        <label>Bank Statement
+            <input type="file" data-category="BANK_STATEMENT">
+        </label>
+    </div>
+    <div class="file-row">
+        <label>Proposed EMI
+            <input type="number" id="proposed_emi" name="proposed_emi" placeholder="Proposed EMI">
+        </label>
+    </div>
+    <div class="file-row">
+        <label>Existing EMI
+            <input type="number" id="existing_emi" name="existing_emi" placeholder="Existing EMI total">
+        </label>
+    </div>
+</div>
+
+<!-- BUSINESS -->
+<div id="businessDocs" class="conditional">
+    <h3>Business Documents</h3>
+    <div class="file-row">
+        <label>Avg Net Profit (3y)
+            <input type="number" id="avg_net_profit_3y" name="avg_net_profit_3y" placeholder="Average net profit (3 years)">
+        </label>
+    </div>
+    <div class="file-row">
+        <label>Business Age (years)
+            <input type="number" id="business_age_years" name="business_age_years" placeholder="Business age in years">
+        </label>
+    </div>
+    <div class="file-row">
+        <label>Business Registration
+            <input type="file" data-category="BUSINESS_REGISTRATION" data-required="true">
+        </label>
+    </div>
+    <div class="file-row">
+        <label>Financial Statement (ITR / P&L)
+            <input type="file" data-category="FINANCIAL_STATEMENT" data-required="true">
+        </label>
+    </div>
+    <div class="file-row">
+        <label>Proposed EMI
+            <input type="number" id="proposed_emi_business" name="proposed_emi_business" placeholder="Proposed EMI">
+        </label>
+    </div>
+</div>
+
+<!-- FARMER -->
+<div id="farmerDocs" class="conditional">
+    <h3>Farmer Documents</h3>
+    <div class="file-row">
+        <label>Annual Agri Income
+            <input type="number" id="annual_agri_income" name="annual_agri_income" placeholder="Annual agricultural income">
+        </label>
+    </div>
+    <div class="file-row">
+        <label>Land Record
+            <input type="file" data-category="LAND_RECORD">
+        </label>
+    </div>
+    <div class="file-row">
+        <label>Crop Sale Receipt
+            <input type="file" data-category="CROP_SALE_RECEIPT">
+        </label>
+    </div>
+    <div class="file-row">
+        <label>KCC Statement (required)
+            <input type="file" data-category="KISAN_CREDIT_CARD_STMT" data-required="true">
+        </label>
+    </div>
+    <div class="file-row">
+        <label>KCC Overdue (yes/no)
+            <select id="kcc_overdue" name="kcc_overdue">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+            </select>
+        </label>
+    </div>
+    <div class="file-row">
+        <label>Credit Score (optional for Farmer)
+            <input type="number" id="credit_score_farmer" name="credit_score_farmer" placeholder="Credit score (if available)">
+        </label>
+    </div>
+</div>
+
+<button class="btn" onclick="submitDocuments()">Submit Documents</button>
+
+<div id="uploadStatus" class="upload-status" style="display:none; margin-top:1rem;">
+    <div id="statusMessage" class="message"></div>
+</div>
+
+{% endblock %}
