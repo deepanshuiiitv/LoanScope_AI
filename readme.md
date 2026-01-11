@@ -51,7 +51,26 @@ project/
 pip install flask langchain-core numpy google google-generativeai google-genai
 ````
 
-### 2️⃣ Run the server
+### 2️⃣ Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+API_KEY=your_google_gemini_api_key
+```
+
+Or export directly:
+
+```bash
+export API_KEY=your_google_gemini_api_key   # macOS / Linux
+set API_KEY=your_google_gemini_api_key      # Windows
+```
+
+> ⚠️ **Never commit API keys to version control**
+
+---
+
+### 3️⃣ Run the server
 
 ```bash
 python app.py
@@ -150,6 +169,88 @@ Runs **all 3 AI agents** on a document.
 Evaluates loan eligibility using rules + AI.
 
 ---
+---
+
+## 📥 Input Schema for `/loan/assess`
+
+The `/loan/assess` API expects a **JSON body**.
+Fields vary by applicant **profession**, but all requests must follow the rules below.
+
+---
+
+## 🔑 COMMON FIELDS (USED FOR ALL CASES)
+
+| Field                  | Necessary | Source Document       | Purpose           |
+| ---------------------- | --------- | --------------------- | ----------------- |
+| `profession`           | ✅         | Loan Application Form | Route rule set    |
+| `age`                  | ✅         | PAN / Aadhaar         | Eligibility       |
+| `pan_valid`            | ✅         | PAN Card              | Identity & bureau |
+| `credit_score`         | ✅*        | Credit Bureau         | Credit discipline |
+| `dpd_30_plus_last_12m` | ✅         | Credit Bureau         | Default check     |
+| `legal_clearance`      | ✅         | Advocate Legal Report | Security safety   |
+| `loan_amount`          | ✅         | Loan Application      | LTV, EMI calc     |
+| `property_value`       | ✅         | Valuation Report      | LTV calculation   |
+
+***** `credit_score` is **optional ONLY for Farmer / NTC cases**
+(Handled via alternate rules in the engine)
+
+---
+
+## 👔 SALARIED-ONLY FIELDS
+
+| Field                | Necessary | Source Document           | Purpose          |
+| -------------------- | --------- | ------------------------- | ---------------- |
+| `net_monthly_salary` | ✅         | Salary Slips (3 months)   | EMI capacity     |
+| `salary_credits`     | ✅         | Bank Statement (6 months) | Income stability |
+| `existing_emi`       | ✅         | Bureau + Bank Statement   | FOIR             |
+| `proposed_emi`       | ✅         | SBI System                | FOIR             |
+| `avg_net_profit_3y`  | ❌         | —                         | Not applicable   |
+| `business_age_years` | ❌         | —                         | Not applicable   |
+| `annual_agri_income` | ❌         | —                         | Not applicable   |
+| `kcc_overdue`        | ❌         | —                         | Not applicable   |
+
+---
+
+## 🧾 SELF-EMPLOYED / BUSINESS FIELDS
+
+| Field                | Necessary | Source Document         | Purpose        |
+| -------------------- | --------- | ----------------------- | -------------- |
+| `avg_net_profit_3y`  | ✅         | ITR + COI (3 years)     | Usable income  |
+| `business_age_years` | ✅         | GST / Shop Act          | Continuity     |
+| `existing_emi`       | ✅         | Bureau + Bank Statement | FOIR           |
+| `proposed_emi`       | ✅         | SBI System              | FOIR           |
+| `net_monthly_salary` | ❌         | —                       | Not applicable |
+| `salary_credits`     | ❌         | —                       | Not applicable |
+| `annual_agri_income` | ❌         | —                       | Not applicable |
+| `kcc_overdue`        | ❌         | —                       | Not applicable |
+
+---
+
+## 🌾 FARMER / AGRICULTURIST FIELDS
+
+| Field                | Necessary | Source Document                    | Purpose           |
+| -------------------- | --------- | ---------------------------------- | ----------------- |
+| `annual_agri_income` | ✅         | Income Certificate + Sale Receipts | EMI ability       |
+| `kcc_overdue`        | ✅         | KCC Statement                      | Credit discipline |
+| `existing_emi`       | ✅         | Bank / KCC                         | FOIR              |
+| `proposed_emi`       | ✅         | SBI System                         | FOIR              |
+| `credit_score`       | ⚪         | Bureau (if exists)                 | Optional          |
+| `net_monthly_salary` | ❌         | —                                  | Not applicable    |
+| `salary_credits`     | ❌         | —                                  | Not applicable    |
+| `avg_net_profit_3y`  | ❌         | —                                  | Not applicable    |
+| `business_age_years` | ❌         | —                                  | Not applicable    |
+
+---
+
+## ▶️ Example: Hit `/loan/assess` (Salaried)
+
+```http
+POST /loan/assess
+Content-Type: application/json
+```
+
+
+
 
 ### ▶️ Request (JSON)
 
@@ -196,7 +297,7 @@ clear_sample_documents("sample_documents")
 * Policy-first, AI-assisted
 * Stateless APIs
 * Modular agent architecture
-* JSON-friendly 
+* JSON-friendly
 * Production-safe file handling
 
 ---
